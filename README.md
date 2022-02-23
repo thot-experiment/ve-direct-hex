@@ -7,6 +7,7 @@ This is a pretty barebones library for interfacting with the Victron VE.Direct a
 
 a quick rundown of `example.mjs`
 
+basic setup
 ```js
 import fs from 'fs/promises'
 import {debugText} from './debug_tools.mjs'
@@ -16,7 +17,8 @@ import child  from 'child_process'
 //hoist convenience functions for building HEX messages
 let {formatBytesToHex, addCheck, wordToLEBytes} = VEDirect
 ```
-basic setup
+this is a quick and dirty way of getting a working terminal on linux,
+it may also work on other \*nix-like operating systems but i haven't tried
 
 ```js
 const terminal = '/dev/ttyUSB0'
@@ -27,20 +29,17 @@ child.execSync(`stty -F ${terminal} 19200 raw cs8 -cstopb -parenb`)
 let tty = await fs.open('/dev/ttyUSB0', 'a+')
 let stream = tty.createReadStream()
 ```
-this is a quick and dirty way of getting a working terminal on linux,
-it may also work on other \*nix-like operating systems but i haven't tried
+`VEDirect.promise` is a wrapper for the HEX protocol that takes a TTY and an optional Stream (it'll make one if you don't have it handy) initially and then the resultant function takes a buffer and returns a promise that resolves to whatever the answer was from the victron
+
+`VEDirect.nextUpdate` wraps the text protocol, and it's resultant function returns a promise that reolves to the next full text update from the victron
 
 ```js
 let getStatus = VEDirect.nextUpdate(stream)
 let query = VEDirect.promise(tty, stream)
 ```
 
-`VEDirect.promise` is a wrapper for the HEX protocol that takes a TTY and an optional Stream (it'll make one if you don't have it handy) initially and then the resultant function takes a buffer and returns a promise that resolves to whatever the answer was from the victron
-
-`VEDirect.nextUpdate` wraps the text protocol, and it's resultant function returns a promise that reolves to the next full text update from the victron
-
+print the next status updated over the text protocol w/ debug info
 ```js
-//print the next status updated over the text protocol w/ debug info
 console.log('status: ', debugText(await getStatus()))
 ```
 which will resolve to something like this
@@ -79,8 +78,8 @@ status:  {
 }
 ```
 
+add checksum and encode the message as ":[UPPERCASEHEX]\n"
 ```
-//add checksum and encode the message as ":[UPPERCASEHEX]\n"
 let checkVersion = Buffer.from(formatBytesToHex(addCheck([3])))
 console.log("query version: ",await query(checkVersion))
 ```
