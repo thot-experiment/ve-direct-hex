@@ -3,19 +3,20 @@ import {debugText} from './debug_tools.mjs'
 import * as VEDirect from './main.mjs'
 import child  from 'child_process'
 
+//hoist convenience functions for building HEX messages
+let {formatBytesToHex, addCheck, wordToLEBytes} = VEDirect
+
 const terminal = '/dev/ttyUSB0'
 //call stty to set up terminal
 child.execSync(`stty -F ${terminal} 19200 raw cs8 -cstopb -parenb`)
 
-//import convenience functions for building HEX messages
-let {formatBytesToHex, addCheck, wordToLEBytes, nextUpdate} = VEDirect
 
 //open terminal
 let tty = await fs.open('/dev/ttyUSB0', 'a+')
 let stream = tty.createReadStream()
 
+let getStatus = VEDirect.nextUpdate(stream)
 let query = VEDirect.promise(tty, stream)
-let getStatus = nextUpdate(stream)
 
 //print the next status updated over the text protocol w/ debug info
 console.log('status: ', debugText(await getStatus()))
