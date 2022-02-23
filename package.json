@@ -1,6 +1,6 @@
 {
   "name": "ve-direct-hex",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "extremely basic implementation of the VE.Direct and VE.Direct HEX protocols for Victron devices",
   "main": "main.mjs",
   "scripts": {
