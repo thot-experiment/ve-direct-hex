@@ -1,0 +1,22 @@
+{
+  "name": "ve-direct-hex",
+  "version": "0.0.1",
+  "description": "extremely basic implementation of the VE.Direct and VE.Direct HEX protocols for Victron devices",
+  "main": "main.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/thot-experiment/ve-direct-hex"
+  },
+  "keywords": [
+    "victron"
+  ],
+  "author": "thot_experiment",
+  "license": "MIT",
+  "devDependencies": {
+    "jsdoc": "^3.6.10",
+    "minami": "^1.2.3"
+  }
+}
